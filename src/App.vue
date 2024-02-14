@@ -50,7 +50,16 @@ export default {
     },
 
     getPosterPath(query) {
-      return `${store.imageURI}${query}`;
+      if (query) {
+        return `${store.imageURI}${query}`;
+      } else {
+        return "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg";
+      }
+    },
+
+    setRating(rating) {
+      const starRating = Math.ceil(rating / 2);
+      return starRating;
     },
   },
 };
@@ -77,7 +86,16 @@ export default {
         />
         {{ "Lingua originale: " + item.original_language }}
       </li>
-      <li>{{ "Valutazione: " + item.vote_average }}</li>
+      <li>
+        <font-awesome-icon
+          v-for="i in 5"
+          :icon="
+            i <= setRating(item.vote_average)
+              ? 'fa-solid fa-star'
+              : 'fa-regular fa-star'
+          "
+        />
+      </li>
       <li>
         <img :src="getPosterPath(item.poster_path)" alt="immagine" />
       </li>
