@@ -1,12 +1,12 @@
 <script>
 import { store } from "./store";
 import axios from "axios";
+
 export default {
   data() {
     return {
       store,
       searchForm: "",
-      flagURL: "",
     };
   },
 
@@ -17,34 +17,40 @@ export default {
   },
 
   methods: {
-    fetchMovie() {
+    fetchMulti() {
       axios
         .get(
-          `${store.movieURI}${store.apiKey}${this.searchQuery}${store.italianLang}`
+          `${store.multiURI}${store.apiKey}${this.searchQuery}${store.italianLang}`
         )
         .then((result) => {
-          store.requestMovie = result.data.results;
+          const resultArray = result.data.results;
+          store.multiRequest = resultArray.filter(
+            (result) => result.media_type != "person"
+          );
           this.searchForm = "";
-        });
-    },
 
-    fetchSeries() {
-      axios
-        .get(
-          `${store.seriesURI}${store.apiKey}${this.searchQuery}${store.italianLang}`
-        )
-        .then((result) => {
-          store.requestSeries = result.data.results;
-          this.searchForm = "";
+          console.log(store.multiRequest);
         });
     },
 
     getFlag(lang) {
-      if (lang == "en" || lang == "it") {
-        return new URL(`./assets/flags/${lang}.svg`, import.meta.url).href;
+      if (lang == "it") {
+        return (lang = "https://flagsapi.com/IT/flat/32.png");
+      } else if (lang == "en") {
+        return (lang = "https://flagsapi.com/US/flat/32.png");
+      } else if (lang == "de") {
+        return (lang = "https://flagsapi.com/DE/flat/32.png");
+      } else if (lang == "fr") {
+        return (lang = "https://flagsapi.com/FR/flat/32.png");
+      } else if (lang == "ja") {
+        return (lang = "https://flagsapi.com/JP/flat/32.png");
       } else {
-        return new URL(`./assets/flags/other.svg`, import.meta.url).href;
+        return (lang = "https://flagsapi.com/ZW/flat/32.png");
       }
+    },
+
+    getPosterPath(query) {
+      return `${store.imageURI}${query}`;
     },
   },
 };
@@ -53,22 +59,28 @@ export default {
 <template>
   <div class="search-form">
     <input v-model="searchForm" type="text" placeholder="Search movie" />
-    <button @click="fetchMovie()">Cerca</button>
+    <button @click="fetchMulti()">Cerca</button>
   </div>
   <div class="lists-result">
-    <ul v-for="movie in store.requestMovie">
-      <li>{{ "Titolo: " + movie.title }}</li>
-      <li>{{ "Titolo originale: " + movie.original_title }}</li>
+    <ul v-for="item in store.multiRequest">
+      <li v-if="item.media_type == 'movie'">{{ "Titolo: " + item.title }}</li>
+      <li v-else>{{ "Titolo: " + item.name }}</li>
+      <li v-if="item.media_type == 'movie'">
+        {{ "Titolo originale: " + item.original_title }}
+      </li>
+      <li v-else>{{ "Titolo originale: " + item.original_name }}</li>
       <li>
         <img
-          :src="getFlag(movie.original_language)"
+          :src="getFlag(item.original_language)"
           alt="flag"
           class="flag-image"
         />
-        {{ "Lingua originale: " + movie.original_language }}
+        {{ "Lingua originale: " + item.original_language }}
       </li>
-
-      <li>{{ "Valutazione: " + movie.vote_average }}</li>
+      <li>{{ "Valutazione: " + item.vote_average }}</li>
+      <li>
+        <img :src="getPosterPath(item.poster_path)" alt="immagine" />
+      </li>
     </ul>
   </div>
 </template>
