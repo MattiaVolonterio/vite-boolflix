@@ -1,7 +1,17 @@
 @use "./partials/mixins" as *;
 @use "./partials/variables" as *;
 
+@import "bootstrap/scss/bootstrap";
+
 .flag-image {
   display: block;
   width: 30px;
+}
+
+.void-poster {
+  width: 185px;
+  height: 250px;
+  object-fit: contain;
+
+  border: 1px solid black;
 }

@@ -1,52 +1,72 @@
 <script>
 import { store } from "./store";
 import axios from "axios";
+import AppHeader from "./components/AppHeader.vue";
 
 export default {
   data() {
     return {
       store,
-      searchForm: "",
     };
   },
 
-  computed: {
-    searchQuery() {
-      return `&query=${this.searchForm}`;
-    },
+  components: {
+    AppHeader,
   },
 
   methods: {
-    fetchMulti() {
+    fetchMovie(query) {
       axios
         .get(
-          `${store.multiURI}${store.apiKey}${this.searchQuery}${store.italianLang}`
+          `${store.movieURI}${store.apiKey}${this.getQuery(query)}${
+            store.italianLang
+          }`
         )
         .then((result) => {
-          const resultArray = result.data.results;
-          store.multiRequest = resultArray.filter(
-            (result) => result.media_type != "person"
-          );
-          this.searchForm = "";
-
-          console.log(store.multiRequest);
+          store.filmArray = result.data.results.map((movie) => {
+            return {
+              title: movie.title,
+              originalTitle: movie.original_title,
+              language: movie.original_language,
+              vote: movie.vote_average,
+              posterPath: movie.poster_path,
+            };
+          });
         });
     },
 
+    fetchSeries(query) {
+      axios
+        .get(
+          `${store.seriesURI}${store.apiKey}${this.getQuery(query)}${
+            store.italianLang
+          }`
+        )
+        .then((result) => {
+          store.seriesArray = result.data.results.map((serie) => {
+            return {
+              title: serie.name,
+              originalTitle: serie.original_name,
+              language: serie.original_language,
+              vote: serie.vote_average,
+              posterPath: serie.poster_path,
+            };
+          });
+        });
+    },
+
+    fetchAll(query) {
+      this.fetchMovie(query);
+      this.fetchSeries(query);
+    },
+
     getFlag(lang) {
-      if (lang == "it") {
-        return (lang = "https://flagsapi.com/IT/flat/32.png");
-      } else if (lang == "en") {
-        return (lang = "https://flagsapi.com/US/flat/32.png");
-      } else if (lang == "de") {
-        return (lang = "https://flagsapi.com/DE/flat/32.png");
-      } else if (lang == "fr") {
-        return (lang = "https://flagsapi.com/FR/flat/32.png");
-      } else if (lang == "ja") {
-        return (lang = "https://flagsapi.com/JP/flat/32.png");
-      } else {
-        return (lang = "https://flagsapi.com/ZW/flat/32.png");
-      }
+      if (lang == "it") return (lang = "https://flagsapi.com/IT/flat/32.png");
+      if (lang == "en") return (lang = "https://flagsapi.com/US/flat/32.png");
+      if (lang == "de") return (lang = "https://flagsapi.com/DE/flat/32.png");
+      if (lang == "fr") return (lang = "https://flagsapi.com/FR/flat/32.png");
+      if (lang == "ja") return (lang = "https://flagsapi.com/JP/flat/32.png");
+      return (lang = "https://flagsapi.com/ZW/flat/32.png");
     },
 
     getPosterPath(query) {
@@ -61,45 +81,83 @@ export default {
       const starRating = Math.ceil(rating / 2);
       return starRating;
     },
+
+    getQuery(text) {
+      return `&query=${text}`;
+    },
   },
 };
 </script>
 
 <template>
-  <div class="search-form">
-    <input v-model="searchForm" type="text" placeholder="Search movie" />
-    <button @click="fetchMulti()">Cerca</button>
-  </div>
-  <div class="lists-result">
-    <ul v-for="item in store.multiRequest">
-      <li v-if="item.media_type == 'movie'">{{ "Titolo: " + item.title }}</li>
-      <li v-else>{{ "Titolo: " + item.name }}</li>
-      <li v-if="item.media_type == 'movie'">
-        {{ "Titolo originale: " + item.original_title }}
-      </li>
-      <li v-else>{{ "Titolo originale: " + item.original_name }}</li>
-      <li>
-        <img
-          :src="getFlag(item.original_language)"
-          alt="flag"
-          class="flag-image"
-        />
-        {{ "Lingua originale: " + item.original_language }}
-      </li>
-      <li>
-        <font-awesome-icon
-          v-for="i in 5"
-          :icon="
-            i <= setRating(item.vote_average)
-              ? 'fa-solid fa-star'
-              : 'fa-regular fa-star'
+  <AppHeader @perform-search="fetchAll" />
+  <div class="container">
+    <!-- MOVIE -->
+    <div class="movie-result">
+      <ul v-for="movie in store.filmArray">
+        <li>{{ "Titolo: " + movie.title }}</li>
+        <li>{{ "Titolo originale: " + movie.originalTitle }}</li>
+        <li>
+          "Lingua originale:
+          <img
+            :src="getFlag(movie.language)"
+            alt="flag"
+            class="flag-image d-inline"
+          />
           "
-        />
-      </li>
-      <li>
-        <img :src="getPosterPath(item.poster_path)" alt="immagine" />
-      </li>
-    </ul>
+        </li>
+        <li>
+          <font-awesome-icon
+            v-for="i in 5"
+            :icon="
+              i <= setRating(movie.vote)
+                ? 'fa-solid fa-star'
+                : 'fa-regular fa-star'
+            "
+          />
+        </li>
+        <li>
+          <img
+            :src="getPosterPath(movie.posterPath)"
+            alt="immagine"
+            :class="movie.posterPath ? '' : 'void-poster'"
+          />
+        </li>
+      </ul>
+    </div>
+    <!-- SERIES -->
+    <div class="series-result">
+      <ul v-for="serie in store.seriesArray">
+        <li>{{ "Titolo: " + serie.title }}</li>
+        <li>{{ "Titolo originale: " + serie.originalTitle }}</li>
+        <li>
+          "Lingua originale:
+          <img
+            :src="getFlag(serie.language)"
+            alt="flag"
+            class="flag-image d-inline"
+          />
+          "
+        </li>
+        <li>
+          <font-awesome-icon
+            v-for="i in 5"
+            :icon="
+              i <= setRating(serie.vote)
+                ? 'fa-solid fa-star'
+                : 'fa-regular fa-star'
+            "
+          />
+        </li>
+        <li>
+          <img
+            :src="getPosterPath(serie.posterPath)"
+            alt="immagine"
+            :class="serie.posterPath ? '' : 'void-poster'"
+          />
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
