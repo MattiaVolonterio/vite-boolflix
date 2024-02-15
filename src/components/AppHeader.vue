@@ -7,33 +7,41 @@ export default {
   },
 
   emits: ["perform-search"],
+
+  methods: {
+    performSearch() {
+      if (this.searchText) {
+        this.$emit("perform-search", this.searchText);
+        this.searchText = "";
+      }
+    },
+  },
 };
 </script>
+
 <template>
   <header>
     <div class="container">
-      <div class="logo">BOOLFLIX</div>
+      <h1 class="logo">BOOLFLIX</h1>
       <div class="search-bar d-flex">
         <input
           v-model="searchText"
+          @keyup.enter="performSearch()"
           type="text"
           placeholder="Search movie"
           class="form-control"
         />
-        <button
-          @click="$emit('perform-search', searchText)"
-          class="btn btn-danger"
-        >
-          Cerca
-        </button>
+        <button @click="performSearch()" class="btn btn-danger">Cerca</button>
       </div>
     </div>
   </header>
 </template>
 
 <style lang="scss" scoped>
+@use "../styles/partials/variables" as *;
+
 header {
-  height: 100px;
+  height: $header-height;
   background-color: black;
   color: white;
 
@@ -45,6 +53,7 @@ header {
 
     .logo {
       font-size: 2rem;
+      margin-bottom: 0;
       font-weight: bolder;
       color: red;
     }

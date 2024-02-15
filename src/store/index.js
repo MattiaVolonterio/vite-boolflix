@@ -6,7 +6,7 @@ export const store = reactive({
   multiURI: "https://api.themoviedb.org/3/search/multi",
   apiKey: "?api_key=379781a4fe3768d4286069a61fcb5b6e",
   italianLang: "&language=it-IT",
-  imageURI: "https://image.tmdb.org/t/p/w185",
+  imageURI: "https://image.tmdb.org/t/p/w342",
   filmArray: [],
   seriesArray: [],
 });
