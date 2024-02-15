@@ -15,7 +15,7 @@ export default {
       }
     },
     setRating(rating) {
-      const starRating = Math.ceil(rating / 2);
+      const starRating = Math.round(rating / 2);
       return starRating;
     },
     getFlag(lang) {
@@ -82,6 +82,7 @@ export default {
     <div class="card-title">{{ object.title }}</div>
   </div>
 </template>
+
 <style lang="scss" scoped>
 .card-component {
   .top-card-container:hover {
