@@ -131,11 +131,11 @@ export default {
 
       .overview-container {
         height: 250px;
-        overflow: clip;
+        overflow: auto;
       }
       .overview-info {
         margin-top: 0.5rem;
-        overflow: auto;
+        overflow: clip;
         scrollbar-width: none;
       }
     }
