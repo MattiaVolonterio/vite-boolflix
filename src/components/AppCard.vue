@@ -31,50 +31,52 @@ export default {
 </script>
 <template>
   <div class="card-component">
-    <div class="top-card-container">
-      <div class="card-front">
-        <img
-          :src="getPosterPath(object.posterPath)"
-          alt="immagine"
-          :class="object.posterPath ? '' : 'void-poster'"
-        />
-      </div>
-
-      <div class="card-back">
-        <div class="title-info">
-          <span class="bold-text">Titolo: </span>
-          <span>{{ object.title }}</span>
-        </div>
-
-        <div class="original-title-info">
-          <span class="bold-text">Titolo originale: </span>
-          <span>{{ object.originalTitle }}</span>
-        </div>
-
-        <div class="vote-info">
-          <span class="bold-text">Voto: </span>
-          <font-awesome-icon
-            v-for="i in 5"
-            :icon="
-              i <= setRating(object.vote)
-                ? 'fa-solid fa-star'
-                : 'fa-regular fa-star'
-            "
-          />
-        </div>
-
-        <div class="lang-info">
-          <span class="bold-text">Lingua originale: </span>
+    <div class="flip-card">
+      <div class="top-card-container">
+        <div class="card-front">
           <img
-            :src="getFlag(object.language)"
-            alt="flag"
-            class="flag-image d-inline"
+            :src="getPosterPath(object.posterPath)"
+            alt="immagine"
+            :class="object.posterPath ? '' : 'void-poster'"
           />
         </div>
 
-        <span class="bold-text">Overview: </span>
-        <div class="overview-info">
-          <p>{{ object.overview }}</p>
+        <div class="card-back">
+          <div class="title-info">
+            <span class="bold-text">Titolo: </span>
+            <span>{{ object.title }}</span>
+          </div>
+
+          <div class="original-title-info">
+            <span class="bold-text">Titolo originale: </span>
+            <span>{{ object.originalTitle }}</span>
+          </div>
+
+          <div class="vote-info">
+            <span class="bold-text">Voto: </span>
+            <font-awesome-icon
+              v-for="i in 5"
+              :icon="
+                i <= setRating(object.vote)
+                  ? 'fa-solid fa-star'
+                  : 'fa-regular fa-star'
+              "
+            />
+          </div>
+
+          <div class="lang-info">
+            <span class="bold-text">Lingua originale: </span>
+            <img
+              :src="getFlag(object.language)"
+              alt="flag"
+              class="flag-image d-inline"
+            />
+          </div>
+
+          <span class="bold-text">Overview: </span>
+          <div class="overview-info">
+            <p>{{ object.overview }}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -85,43 +87,58 @@ export default {
 
 <style lang="scss" scoped>
 .card-component {
-  .top-card-container:hover {
-    .card-front {
-      display: none;
-    }
-    .card-back {
-      display: block;
-    }
-  }
-  .card-front,
-  .card-back {
+  .flip-card {
+    background-color: transparent;
     height: 468px;
-  }
+    perspective: 1000px;
 
-  .card-back {
-    display: none;
-    padding: 1rem;
-    background-color: black;
-    color: white;
-
-    .bold-text {
-      font-size: 1.1rem;
-      font-weight: bold;
+    .top-card-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
     }
 
-    .fa-star {
-      color: rgb(255, 221, 0);
+    &:hover .top-card-container {
+      transform: rotateY(180deg);
     }
 
-    .overview-info {
-      margin-top: 0.5rem;
-      height: 250px;
-      overflow: auto;
+    .card-front,
+    .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
     }
-  }
-  img {
-    max-width: 100%;
-    height: 100%;
+
+    .card-back {
+      padding: 1rem;
+      background-color: black;
+      color: white;
+      transform: rotateY(180deg);
+
+      .bold-text {
+        font-size: 1.1rem;
+        font-weight: bold;
+      }
+
+      .fa-star {
+        color: rgb(255, 221, 0);
+      }
+
+      .overview-info {
+        margin-top: 0.5rem;
+        height: 250px;
+        overflow: auto;
+        scrollbar-width: none;
+      }
+    }
+
+    img {
+      max-width: 100%;
+      height: 100%;
+    }
   }
 
   .card-title {

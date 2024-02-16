@@ -27,6 +27,7 @@ export default {
         .then((result) => {
           store.filmArray = result.data.results.map((movie) => {
             return {
+              id: movie.id,
               title: movie.title,
               originalTitle: movie.original_title,
               language: movie.original_language,
@@ -48,6 +49,7 @@ export default {
         .then((result) => {
           store.seriesArray = result.data.results.map((serie) => {
             return {
+              id: serie.id,
               title: serie.name,
               originalTitle: serie.original_name,
               language: serie.original_language,
@@ -59,9 +61,15 @@ export default {
         });
     },
 
-    fetchAll(query) {
-      this.fetchMovie(query);
-      this.fetchSeries(query);
+    fetchAll(query, filter) {
+      if (filter == "HOME") {
+        this.fetchMovie(query);
+        this.fetchSeries(query);
+      } else if (filter == "FILM") {
+        this.fetchMovie(query);
+      } else {
+        this.fetchSeries(query);
+      }
     },
 
     getQuery(text) {

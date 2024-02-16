@@ -9,4 +9,5 @@ export const store = reactive({
   imageURI: "https://image.tmdb.org/t/p/w342",
   filmArray: [],
   seriesArray: [],
+  filterSelection: "",
 });

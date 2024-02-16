@@ -16,18 +16,31 @@ export default {
 <template>
   <main>
     <div class="container">
+      <div v-if="store.filterSelection == ''">
+        <h2 class="section-title">EFFETTUA LA TUA PRIMA RICERCA</h2>
+      </div>
       <!-- MOVIES SECTION -->
-      <div class="row g-3">
+      <div
+        v-if="
+          store.filterSelection == 'HOME' || store.filterSelection == 'FILM'
+        "
+        class="row g-3"
+      >
         <h2 class="section-title">MOVIES</h2>
         <div v-for="movie in store.filmArray" class="col-3">
-          <AppCard :object="movie" />
+          <AppCard :object="movie" :key="movie.id" />
         </div>
       </div>
       <!-- SERIES SECTION -->
-      <div class="row g-3">
+      <div
+        v-if="
+          store.filterSelection == 'HOME' || store.filterSelection == 'SERIE'
+        "
+        class="row g-3"
+      >
         <h2 class="section-title">SERIES</h2>
         <div v-for="serie in store.seriesArray" class="col-3">
-          <AppCard :object="serie" />
+          <AppCard :object="serie" :key="serie.id" />
         </div>
       </div>
     </div>
