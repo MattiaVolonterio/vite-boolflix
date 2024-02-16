@@ -16,31 +16,58 @@ export default {
 <template>
   <main>
     <div class="container">
-      <div v-if="store.filterSelection == ''">
-        <h2 class="section-title">EFFETTUA LA TUA PRIMA RICERCA</h2>
-      </div>
-      <!-- MOVIES SECTION -->
-      <div
-        v-if="
-          store.filterSelection == 'HOME' || store.filterSelection == 'FILM'
-        "
-        class="row g-3"
-      >
-        <h2 class="section-title">MOVIES</h2>
-        <div v-for="movie in store.filmArray" class="col-3">
-          <AppCard :object="movie" :key="movie.id" />
+      <div v-if="store.isTrending">
+        <!-- TRENDING MOVIES SECTION -->
+        <div
+          v-if="
+            store.filterSelection == 'HOME' || store.filterSelection == 'FILM'
+          "
+          class="row g-3"
+        >
+          <h2 class="section-title">TRENDING MOVIES</h2>
+          <div v-for="movie in store.filmArray" class="col-3">
+            <AppCard :object="movie" :key="movie.id" />
+          </div>
+        </div>
+
+        <!-- TRENDING SERIES SECTION -->
+        <div
+          v-if="
+            store.filterSelection == 'HOME' || store.filterSelection == 'SERIE'
+          "
+          class="row g-3"
+        >
+          <h2 class="section-title">TRENDING SERIES</h2>
+          <div v-for="serie in store.seriesArray" class="col-3">
+            <AppCard :object="serie" :key="serie.id" />
+          </div>
         </div>
       </div>
-      <!-- SERIES SECTION -->
-      <div
-        v-if="
-          store.filterSelection == 'HOME' || store.filterSelection == 'SERIE'
-        "
-        class="row g-3"
-      >
-        <h2 class="section-title">SERIES</h2>
-        <div v-for="serie in store.seriesArray" class="col-3">
-          <AppCard :object="serie" :key="serie.id" />
+
+      <div v-if="!store.isTrending">
+        <!-- MOVIES SECTION -->
+        <div
+          v-if="
+            store.filterSelection == 'HOME' || store.filterSelection == 'FILM'
+          "
+          class="row g-3"
+        >
+          <h2 class="section-title">MOVIES</h2>
+          <div v-for="movie in store.filmArray" class="col-3">
+            <AppCard :object="movie" :key="movie.id" />
+          </div>
+        </div>
+        <!-- SERIES SECTION -->
+        <div
+          v-if="
+            store.filterSelection == 'HOME' || store.filterSelection == 'SERIE'
+          "
+          class="row g-3"
+        >
+          <h2 class="section-title">SERIES</h2>
+          <div v-for="serie in store.seriesArray" class="col-3">
+            <AppCard :object="serie" :key="serie.id" />
+          </div>
         </div>
       </div>
     </div>

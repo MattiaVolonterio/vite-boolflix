@@ -39,6 +39,24 @@ export default {
         });
     },
 
+    fetchTrendingMovie() {
+      axios
+        .get(`${store.movieTrendingURI}${store.apiKey}${store.italianLang}`)
+        .then((result) => {
+          store.filmArray = result.data.results.map((movie) => {
+            return {
+              id: movie.id,
+              title: movie.title,
+              originalTitle: movie.original_title,
+              language: movie.original_language,
+              vote: movie.vote_average,
+              posterPath: movie.poster_path,
+              overview: movie.overview,
+            };
+          });
+        });
+    },
+
     fetchSeries(query) {
       axios
         .get(
@@ -61,20 +79,37 @@ export default {
         });
     },
 
-    fetchAll(query, filter) {
-      if (filter == "HOME") {
-        this.fetchMovie(query);
-        this.fetchSeries(query);
-      } else if (filter == "FILM") {
-        this.fetchMovie(query);
-      } else {
-        this.fetchSeries(query);
-      }
+    fetchTrendingSeries() {
+      axios
+        .get(`${store.seriesTrendingURI}${store.apiKey}${store.italianLang}`)
+        .then((result) => {
+          store.seriesArray = result.data.results.map((serie) => {
+            return {
+              id: serie.id,
+              title: serie.name,
+              originalTitle: serie.original_name,
+              language: serie.original_language,
+              vote: serie.vote_average,
+              posterPath: serie.poster_path,
+              overview: serie.overview,
+            };
+          });
+        });
+    },
+
+    fetchAll(query) {
+      this.fetchMovie(query);
+      this.fetchSeries(query);
     },
 
     getQuery(text) {
       return `&query=${text}`;
     },
+  },
+
+  created() {
+    this.fetchTrendingMovie();
+    this.fetchTrendingSeries();
   },
 };
 </script>

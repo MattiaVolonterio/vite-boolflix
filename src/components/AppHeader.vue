@@ -16,15 +16,15 @@ export default {
   methods: {
     performSearch() {
       if (this.searchText) {
-        store.filterSelection = this.currentSelection;
-        this.$emit("perform-search", this.searchText, this.currentSelection);
-        this.searchText = "";
+        store.isTrending = false;
+        this.$emit("perform-search", this.searchText);
       }
     },
 
     changeSelected(index, selection) {
       this.currentSelectionIndex = index;
       this.currentSelection = selection;
+      store.filterSelection = this.currentSelection;
     },
   },
 };

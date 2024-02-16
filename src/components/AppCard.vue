@@ -89,7 +89,7 @@ export default {
 .card-component {
   .flip-card {
     background-color: transparent;
-    height: 468px;
+    height: 480px;
     perspective: 1000px;
 
     .top-card-container {
