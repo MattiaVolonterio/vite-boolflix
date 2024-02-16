@@ -74,8 +74,10 @@ export default {
           </div>
 
           <span class="bold-text">Overview: </span>
-          <div class="overview-info">
-            <p>{{ object.overview }}</p>
+          <div class="overview-container">
+            <div class="overview-info">
+              <p>{{ object.overview }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -127,9 +129,12 @@ export default {
         color: rgb(255, 221, 0);
       }
 
+      .overview-container {
+        height: 250px;
+        overflow: clip;
+      }
       .overview-info {
         margin-top: 0.5rem;
-        height: 250px;
         overflow: auto;
         scrollbar-width: none;
       }
